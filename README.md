@@ -1,6 +1,6 @@
 TARDIS
 
-Bug tracing system for the course "Programming with Python"
+Bug tracking system for the course "Programming with Python"
 
 License
 
