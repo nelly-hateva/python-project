@@ -2,12 +2,21 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'projects/style.css' %}" />
 
-{% if latest_poll_list %}
-    <ul>
-    {% for poll in latest_poll_list %}
-        <li><a href="{% url 'polls:detail' poll.id %}">{{ poll.question }}</a></li>
-    {% endfor %}
-    </ul>
+{% if projects_list %}
+  <div id="projects">
+    <table>
+      <tr>
+        <th>Project</th>
+        <th>Project Lead</th>
+      </tr>
+      <tr class="alt">
+      {% for project in projects_list %}
+          <td>{{ project.title }}</td>
+          <td>{{project.lead}}</td>
+      {% endfor %}
+      </tr>
+    </table>
+  </div>
 {% else %}
-    <p>No projects available yet.</p>
+  <p>No projects available yet.</p>
 {% endif %}
