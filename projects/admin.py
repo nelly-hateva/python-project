@@ -7,7 +7,7 @@ class ProjectAdmin(admin.ModelAdmin):
         (None,               {'fields': ['title']}),
         ('Date information', {'fields': ['start_date'],
                                   'classes': ['collapse']}),
-        (None,               {'fields': ['lead']}),              
+        (None,               {'fields': ['lead']}),
         (None,               {'fields': ['kind']}),
     ]
 
