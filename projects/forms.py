@@ -10,7 +10,7 @@ class CreateProjectForm(forms.Form):
         self.fields['title'] = forms.CharField(max_length=50,
                                                label='Project Title',
                                                required=True)
-        self.fields['choice'] = forms.ChoiceField(label='Select Project Type',
+        self.fields['kind'] = forms.ChoiceField(label='Select Project Type',
                                    widget=forms.RadioSelect,
-                                   choices=Project.TYPE_OF_PROJECTS_CHOICES,
+                                   choices=Project.TYPE_OF_PROJECTS,
                                    required=True)

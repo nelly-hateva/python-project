@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, FormView, RedirectView
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.shortcuts import render
 
 from projects.models import Project
 from projects.forms import CreateProjectForm
@@ -31,22 +32,21 @@ class CreateProjectView(FormView):
 class AddProjectView(RedirectView):
     def post(self, request, *args, **kwargs):
         try:
-            kind = request.POST['choice']
+            title = request.POST['title']
         except KeyError:
             # Redisplay the project create form.
             return render(request, 'projects/create_project.html', {
-                'error_message': "You didn't select type of project.",
+                'error_message': "All fields are required.",
+            })
+        try:
+            kind = request.POST['kind']
+        except KeyError:
+            # Redisplay the project create form.
+            return render(request, 'projects/create_project.html', {
+                'error_message': "All fields are required.",
             })
         else:
-            try:
-                title = request.POST['title']
-            except KeyError:
-                # Redisplay the project create form.
-                return render(request, 'projects/create_project.html', {
-                    'error_message': "Please enter the title of the project.",
-                })
-            else:
-                Project.objects.create(title=title,
-                                       start_date=timezone.now(),
-                                       lead="Nelly Hateva", kind=kind)
-                return HttpResponseRedirect(reverse('projects:index'))
+            Project.objects.create(title=title,
+                                   start_date=timezone.now(),
+                                   lead="Nelly Hateva", kind=kind)
+            return HttpResponseRedirect(reverse('projects:index'))
