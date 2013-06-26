@@ -1,14 +1,14 @@
-from django.views.generic import ListView, DetailView, FormView, RedirectView
+from django.views import generic
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 
-from projects.models import Project
+from projects.models import Project, Issue
 from projects.forms import CreateProjectForm
 
 
-class IndexView(ListView):
+class IndexView(generic.ListView):
     template_name = 'projects/index.html'
     context_object_name = 'projects_list'
 
@@ -16,7 +16,7 @@ class IndexView(ListView):
         return Project.objects.order_by('-start_date')
 
 
-class DetailView(DetailView):
+class DetailView(generic.DetailView):
     model = Project
     template_name = 'projects/detail.html'
 
@@ -24,12 +24,12 @@ class DetailView(DetailView):
         return Project.objects.all()
 
 
-class CreateProjectView(FormView):
+class CreateProjectView(generic.FormView):
     template_name = 'projects/create_project.html'
     form_class = CreateProjectForm
 
 
-class AddProjectView(RedirectView):
+class AddProjectView(generic.RedirectView):
     def post(self, request, *args, **kwargs):
         try:
             title = request.POST['title']
@@ -50,3 +50,11 @@ class AddProjectView(RedirectView):
                                    start_date=timezone.now(),
                                    lead="Nelly Hateva", kind=kind)
             return HttpResponseRedirect(reverse('projects:index'))
+
+
+class CreateIssueView(generic.CreateView):
+    model = Issue
+
+
+class AddIssueView(generic.View):
+    pass

@@ -9,4 +9,8 @@ urlpatterns = patterns('',
         name='create'),
     url(r'^add/$', views.AddProjectView.as_view(), name='add'),
     url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^create_issue/$', views.CreateIssueView.as_view(),
+        name='create_issue'),
+    url(r'^add_issue/$', views.AddIssueView.as_view(),
+        name='add_issue'),
 )
