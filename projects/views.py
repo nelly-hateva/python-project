@@ -42,5 +42,8 @@ class CreateIssueView(generic.CreateView):
 
 class AddIssueView(generic.RedirectView):
     def post(self, request, *args, **kwargs):
-        IssueForm(request.POST).save()
+        issue_form = IssueForm(request.POST)
+        issue = issue_form.save(commit=False)
+        issue.project = Project.objects.all().get(pk=int(kwargs['pk']))
+        issue_form.save()
         return super(AddIssueView, self).post(request, *args, **kwargs)

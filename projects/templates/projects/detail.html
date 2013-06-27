@@ -2,7 +2,7 @@
 Lead: <a href=""> {{project.lead}} </a>
 
 <br>
-<a href="{% url 'projects:create_issue' %}"> Create Issue </a>
+<a href="{% url 'projects:create_issue' project.id %}"> Create Issue </a>
 
 {% if issues_list %}
   <div class="issues">
