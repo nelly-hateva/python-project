@@ -1,16 +1,15 @@
 from django import forms
 
-from projects.models import Project
+from projects.models import Project, Issue
 
 
-class CreateProjectForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(CreateProjectForm, self).__init__(*args, **kwargs)
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        exclude = ('start_date')
 
-        self.fields['title'] = forms.CharField(max_length=50,
-                                               label='Project Title',
-                                               required=True)
-        self.fields['kind'] = forms.ChoiceField(label='Select Project Type',
-                                   widget=forms.RadioSelect,
-                                   choices=Project.TYPE_OF_PROJECTS,
-                                   required=True)
+
+class IssueForm(forms.ModelForm):
+    class Meta:
+        model = Issue
+        exclude = ('project', 'status', 'comment')

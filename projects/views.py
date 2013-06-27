@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 
 from projects.models import Project, Issue
-from projects.forms import CreateProjectForm
+from projects.forms import ProjectForm, IssueForm
 
 
 class IndexView(generic.ListView):
@@ -24,37 +24,23 @@ class DetailView(generic.DetailView):
         return Project.objects.all()
 
 
-class CreateProjectView(generic.FormView):
-    template_name = 'projects/create_project.html'
-    form_class = CreateProjectForm
+class CreateProjectView(generic.CreateView):
+    model = Project
+    form_class = ProjectForm
 
 
 class AddProjectView(generic.RedirectView):
     def post(self, request, *args, **kwargs):
-        try:
-            title = request.POST['title']
-        except KeyError:
-            # Redisplay the project create form.
-            return render(request, 'projects/create_project.html', {
-                'error_message': "All fields are required.",
-            })
-        try:
-            kind = request.POST['kind']
-        except KeyError:
-            # Redisplay the project create form.
-            return render(request, 'projects/create_project.html', {
-                'error_message': "All fields are required.",
-            })
-        else:
-            Project.objects.create(title=title,
-                                   start_date=timezone.now(),
-                                   lead="Nelly Hateva", kind=kind)
-            return HttpResponseRedirect(reverse('projects:index'))
+        ProjectForm(request.POST).save()
+        return super(AddProjectView, self).post(request, *args, **kwargs)
 
 
 class CreateIssueView(generic.CreateView):
     model = Issue
+    form_class = IssueForm
 
 
-class AddIssueView(generic.View):
-    pass
+class AddIssueView(generic.RedirectView):
+    def post(self, request, *args, **kwargs):
+        IssueForm(request.POST).save()
+        return super(AddIssueView, self).post(request, *args, **kwargs)

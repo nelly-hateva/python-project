@@ -7,14 +7,14 @@ from django.core.urlresolvers import reverse
 from projects.models import Project
 
 
-def create_project(title, days, lead, kind):
+def create_project(title, days, lead, project_type):
     """
-    Creates a project with the given `title`, `lead` and `kind`
+    Creates a project with the given `title`, `lead` and `project_type`
     started the given number of `days` offset to now (negative number).
     """
     return Project.objects.create(title=title,
         start_date=timezone.now() + datetime.timedelta(days=days),
-        lead=lead, kind=kind)
+        lead=lead, project_type=project_type)
 
 
 class ProjectsIndexViewTests(TestCase):
@@ -32,7 +32,7 @@ class ProjectsIndexViewTests(TestCase):
         One project should be displayed on the index page.
         """
         create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", kind="BP")
+                       lead="Nelly Hateva", project_type="BP")
         response = self.client.get(reverse('projects:index'))
         self.assertQuerysetEqual(
             response.context['projects_list'],
@@ -44,11 +44,11 @@ class ProjectsIndexViewTests(TestCase):
         Projects should be displayed on the index page.
         """
         create_project(title="Agile Kanban project", days=-5,
-                       lead="Ivan Ivanov", kind="AK")
+                       lead="Ivan Ivanov", project_type="AK")
         create_project(title="Blank project", days=-2,
-                       lead="Nelly Hateva", kind="BP")
+                       lead="Nelly Hateva", project_type="BP")
         create_project(title="Agile Scrum project", days=-1,
-                       lead="Georgi Ivanov", kind="AS")
+                       lead="Georgi Ivanov", project_type="AS")
         response = self.client.get(reverse('projects:index'))
         self.assertQuerysetEqual(
             response.context['projects_list'],
@@ -72,7 +72,7 @@ class ProjectDetailViewTests(TestCase):
         the project's title.
         """
         project = create_project(title="Project title", days=-1,
-                                 lead="Georgi Georgiev", kind="AK")
+                                 lead="Georgi Georgiev", project_type="AK")
         response = self.client.get(reverse('projects:detail',
                                            args=(project.id,)))
         self.assertContains(response, project.title, status_code=200)
@@ -89,14 +89,14 @@ class CreateProjectViewTests(TestCase):
 
 
 class AddProjectViewTest(TestCase):
-    def test_add_a_project_with_title_and_kind(self):
+    def test_add_a_project_with_title_and_project_type(self):
         """
         If the form is valid, the project must be saved to the database
         and the client should be redirected to the index page.
         """
         #response = self.client.post(reverse('projects:create'),
         #                            {'title': 'Project title',
-        #                             'kind': 'AK'})
+        #                             'project_type': 'AK'})
         #print(Project.objects.all())
         #self.assertEqual(response.status_code, 302)
         #self.assertEqual(Project.objects.all()[0].pk, 1)
@@ -110,13 +110,13 @@ class AddProjectViewTest(TestCase):
         """
         response = self.client.post(reverse('projects:create'),
                                     {'title': '',
-                                     'kind': 'AK'})
+                                     'project_type': 'AK'})
         #self.assertContains(response,
         #                    'All fields are required.',
         #                    status_code=200)
         self.assertEqual(Project.objects.all().count(), 0)
 
-    def test_add_a_project_with_no_kind(self):
+    def test_add_a_project_with_no_project_type(self):
         """
         If the form is invalid, the view should return
         the create project view with error message

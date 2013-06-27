@@ -10,15 +10,13 @@ class IssueInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['title']}),
-        ('Date information', {'fields': ['start_date'],
-                                  'classes': ['collapse']}),
         (None,               {'fields': ['lead']}),
-        (None,               {'fields': ['kind']}),
+        (None,               {'fields': ['project_type']}),
     ]
     inlines = [IssueInline]
 
-    list_display = ('title', 'start_date', 'lead', 'kind')
-    list_filter = ['start_date', 'kind', 'lead']
+    list_display = ('title', 'start_date', 'lead', 'project_type')
+    list_filter = ['start_date', 'project_type', 'lead']
     search_fields = ['title', 'lead']
     date_hierarchy = 'start_date'
 

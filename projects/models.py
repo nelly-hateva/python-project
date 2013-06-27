@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 
 class Project(models.Model):
     title = models.CharField(max_length=50, blank=False)
-    start_date = models.DateTimeField('date started')
+    start_date = models.DateTimeField('date started',
+                                      blank=False, auto_now_add=True)
     lead = models.CharField(max_length=50, blank=False)
 
     BUG_TRACKING = 'BT'
@@ -23,7 +24,7 @@ class Project(models.Model):
         (BLANK_PROJECT, 'Blank Project'),
         (DEMO_PROJECT, 'Demo Project'),
     )
-    kind = models.CharField(max_length=2,
+    project_type = models.CharField(max_length=2,
                             choices=TYPE_OF_PROJECTS,
                             default=BLANK_PROJECT)
 
