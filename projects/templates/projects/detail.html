@@ -4,21 +4,19 @@ Lead: <a href=""> {{project.lead}} </a>
 <br>
 <a href="{% url 'projects:create_issue' project.id %}"> Create Issue </a>
 
-{% if issues_list %}
-  <div class="issues">
-    <table>
+<br>
+<div class="issues">
+  <table>
+     <tr>
+      <th> Issue </th>
+      <th> Status </th>
+     </tr>
+
+    {% for issue in project.issue_set.all %}
       <tr>
-        <th> Issue </th>
-        <th> Status </th>
+        <td><a href=""> {{ issue.summary }} </a></td>
+        <td><a href=""> {{ issue.status }} </a></td>
       </tr>
-      {% for issue in issues_list %}
-        <tr>
-          <td><a href=""> {{ issue.summary }} </a></td>
-          <td><a href=""> {{ issue.status }} </a></td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
-{% else %}
-  <p>No issues added.</p>
-{% endif %}
+    {% endfor %}
+  </table>
+</div>

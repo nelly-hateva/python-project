@@ -31,7 +31,9 @@ class CreateProjectView(generic.CreateView):
 
 class AddProjectView(generic.RedirectView):
     def post(self, request, *args, **kwargs):
-        ProjectForm(request.POST).save()
+        project_form = ProjectForm(request.POST)
+        if project_form.is_valid():
+            project_form.save()
         return super(AddProjectView, self).post(request, *args, **kwargs)
 
 
@@ -43,7 +45,8 @@ class CreateIssueView(generic.CreateView):
 class AddIssueView(generic.RedirectView):
     def post(self, request, *args, **kwargs):
         issue_form = IssueForm(request.POST)
-        issue = issue_form.save(commit=False)
-        issue.project = Project.objects.all().get(pk=int(kwargs['pk']))
-        issue_form.save()
+        if issue_form.is_valid():
+            issue = issue_form.save(commit=False)
+            issue.project = Project.objects.all().get(pk=int(kwargs['pk']))
+            issue_form.save()
         return super(AddIssueView, self).post(request, *args, **kwargs)
