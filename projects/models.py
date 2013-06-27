@@ -67,8 +67,26 @@ class Issue(models.Model):
                             default=MAJOR)
 
     assignee = models.CharField(max_length=50, blank=False)
+    reporter = models.CharField(max_length=50, blank=False)
     description = models.TextField(blank=False)
     due_date = models.DateField(auto_now_add=True)
+
+    OPEN = 'OP'
+    IN_PROGRESS = 'PR'
+    RESOLVED = 'RS'
+    REOPENED = 'RO'
+    CLOSED = 'CL'
+    STATUS_TYPES = (
+        (OPEN, 'Open'),
+        (IN_PROGRESS, 'In progress'),
+        (RESOLVED, 'Resolved'),
+        (REOPENED, 'Reopened'),
+        (CLOSED, 'Closed'),
+    )
+    status = models.CharField(max_length=2,
+                              choices=STATUS_TYPES,
+                              default=OPEN)
+    comment = models.TextField(blank=False)
 
     def __str__(self):
         return self.summary
