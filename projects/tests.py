@@ -100,10 +100,10 @@ class AddProjectViewTest(TestCase):
         If the form is valid, the project must be saved to the database
         and the client should be redirected to the index page.
         """
-        #response = self.client.post(reverse('projects:create'),
-        #                            {'title': 'Project title',
-        #                             'lead': 'Project lead',
-        #                             'project_type': 'AK'})
+        response = self.client.post(reverse('projects:create'),
+                                    {'title': 'Project title',
+                                     'lead': 'Project lead',
+                                     'project_type': 'AK'})
         #print(Project.objects.all())
         #self.assertEqual(response.status_code, 302)
         #self.assertEqual(Project.objects.all()[0].pk, 1)
@@ -113,14 +113,14 @@ class AddProjectViewTest(TestCase):
         """
         If the form is invalid, the view should return
         the create project view with error message
-        "Please enter the title of the project.".
+        "All the fields are required".
         """
         #response = self.client.post(reverse('projects:create'),
         #                            {'title': '',
         #                             'lead': 'Project lead',
         #                             'project_type': 'AK'})
         #self.assertContains(response,
-        #                    'All fields are required.',
+        #                    'All the fields are required.',
         #                    status_code=200)
         #self.assertEqual(Project.objects.all().count(), 0)
 
@@ -128,12 +128,27 @@ class AddProjectViewTest(TestCase):
         """
         If the form is invalid, the view should return
         the create project view with error message
-        "You didn't select type of project.".
+        "All the fields are required".
         """
         #response = self.client.post(reverse('projects:create'),
-        #                            {'title': 'Title'})
+        #                            {'title': '',
+        #                             'lead': 'Project lead'})
         #self.assertContains(response,
-        #                    'All fields are required.',
+        #                    'All the fields are required.',
+        #                    status_code=200)
+        #self.assertEqual(Project.objects.all().count(), 0)
+
+    def test_add_a_project_with_no_lead(self):
+        """
+        If the form is invalid, the view should return
+        the create project view with error message
+        "All the fields are required".
+        """
+        #response = self.client.post(reverse('projects:create'),
+        #                            {'title': '',
+        #                             'project_type': 'AK'})
+        #self.assertContains(response,
+        #                    'All the fields are required.',
         #                    status_code=200)
         #self.assertEqual(Project.objects.all().count(), 0)
 
@@ -167,7 +182,7 @@ class CreateIssueViewTests(TestCase):
         return a 404 not found.
         """
         response = self.client.get(reverse('projects:create_issue', args=(1,)))
-        #self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
 
 class AddIssueViewTest(TestCase):
@@ -178,14 +193,14 @@ class AddIssueViewTest(TestCase):
         """
         create_project(title="Blank project", days=-1,
                        lead="Nelly Hateva", project_type="BP")
-        response = self.client.post(reverse('projects:create_issue',
-                                              args=(1,)),
-                                            {'issue_type': 'BG',
-                                            'summary': 'Issue summary',
-                                            'priority': 'MJ',
-                                            'assignee': 'Ivan Ivanov',
-                                            'reporter': 'Kircho Kirev',
-                                            'description': 'Bug description'})
+        #response = self.client.post(reverse('projects:create_issue',
+        #                                      args=(1,)),
+        #                                    {'issue_type': 'BG',
+        #                                    'summary': 'Issue summary',
+        #                                    'priority': 'MJ',
+        #                                    'assignee': 'Ivan Ivanov',
+        #                                    'reporter': 'Kircho Kirev',
+        #                                    'description': 'Bug description'})
         #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 1)
         #self.assertContains(response, 'Create Project', status_code=200)
 
@@ -196,12 +211,12 @@ class AddIssueViewTest(TestCase):
         """
         create_project(title="Blank project", days=-1,
                        lead="Nelly Hateva", project_type="BP")
-        response = self.client.post(reverse('projects:create_issue',
-                                              args=(1,)),
-                                            {'issue_type': 'BG',
-                                            'priority': 'MJ',
-                                            'assignee': 'Ivan Ivanov',
-                                            'reporter': 'Kircho Kirev',
-                                            'description': 'Bug description'})
+        #response = self.client.post(reverse('projects:create_issue',
+        #                                      args=(1,)),
+        #                                    {'issue_type': 'BG',
+        #                                    'priority': 'MJ',
+        #                                    'assignee': 'Ivan Ivanov',
+        #                                    'reporter': 'Kircho Kirev',
+        #                                    'description': 'Bug description'})
         #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
         #self.assertContains(response, 'Create Project', status_code=200)
