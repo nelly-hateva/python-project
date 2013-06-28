@@ -34,7 +34,13 @@ class AddProjectView(generic.RedirectView):
         project_form = ProjectForm(request.POST)
         if project_form.is_valid():
             project_form.save()
-        return super(AddProjectView, self).post(request, *args, **kwargs)
+            return super(AddProjectView, self).post(request, *args, **kwargs)
+        else:
+            # Redisplay the create project form.
+            return render(request, 'projects/project_form.html', {
+                'form': ProjectForm,
+                'error_message': "All the fields are required",
+            })
 
 
 class CreateIssueView(generic.CreateView):
@@ -49,4 +55,10 @@ class AddIssueView(generic.RedirectView):
             issue = issue_form.save(commit=False)
             issue.project = Project.objects.all().get(pk=int(kwargs['pk']))
             issue_form.save()
-        return super(AddIssueView, self).post(request, *args, **kwargs)
+            return super(AddIssueView, self).post(request, *args, **kwargs)
+        else:
+            # Redisplay the create issue form
+            return render(request, 'projects/issue_form.html', {
+                'form': IssueForm,
+                'error_message': "All the fields are required",
+            })

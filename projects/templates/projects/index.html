@@ -2,23 +2,23 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'projects/style.css' %}" />
 
-<a href="{% url 'projects:create' %}">Create Project</a>
+<a href="{% url 'projects:create' %}"> Create Project </a>
 
 {% if projects_list %}
   <div id="projects">
     <table>
       <tr>
-        <th>Project</th>
-        <th>Project Lead</th>
+        <th> Project </th>
+        <th> Project Lead </th>
       </tr>
       {% for project in projects_list %}
         <tr>
-          <td><a href="{% url 'projects:detail' project.id %}">{{ project.title }}</a></td>
-          <td><a href="">{{project.lead}}</a></td>
+          <td><a href="{% url 'projects:detail' project.id %}"> {{ project.title }} </a></td>
+          <td><a href=""> {{project.lead}} </a></td>
         </tr>
       {% endfor %}
     </table>
   </div>
 {% else %}
-  <p>No projects available yet.</p>
+  <p> No projects available yet. </p>
 {% endif %}

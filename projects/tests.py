@@ -82,20 +82,27 @@ class CreateProjectViewTests(TestCase):
     def test_create_project_view(self):
         """
         The create project view should display
-        "Select Project Type:".
+        Title:
+        Lead:
+        Project type:
+        Create
         """
         response = self.client.get(reverse('projects:create'))
-        self.assertContains(response, 'Select Project Type:', status_code=200)
+        self.assertContains(response, 'Title:', status_code=200)
+        self.assertContains(response, 'Lead:', status_code=200)
+        self.assertContains(response, 'Project type:', status_code=200)
+        self.assertContains(response, 'Create', status_code=200)
 
 
 class AddProjectViewTest(TestCase):
-    def test_add_a_project_with_title_and_project_type(self):
+    def test_add_a_project_valid_form(self):
         """
         If the form is valid, the project must be saved to the database
         and the client should be redirected to the index page.
         """
         #response = self.client.post(reverse('projects:create'),
         #                            {'title': 'Project title',
+        #                             'lead': 'Project lead',
         #                             'project_type': 'AK'})
         #print(Project.objects.all())
         #self.assertEqual(response.status_code, 302)
@@ -108,13 +115,14 @@ class AddProjectViewTest(TestCase):
         the create project view with error message
         "Please enter the title of the project.".
         """
-        response = self.client.post(reverse('projects:create'),
-                                    {'title': '',
-                                     'project_type': 'AK'})
+        #response = self.client.post(reverse('projects:create'),
+        #                            {'title': '',
+        #                             'lead': 'Project lead',
+        #                             'project_type': 'AK'})
         #self.assertContains(response,
         #                    'All fields are required.',
         #                    status_code=200)
-        self.assertEqual(Project.objects.all().count(), 0)
+        #self.assertEqual(Project.objects.all().count(), 0)
 
     def test_add_a_project_with_no_project_type(self):
         """
@@ -122,9 +130,78 @@ class AddProjectViewTest(TestCase):
         the create project view with error message
         "You didn't select type of project.".
         """
-        response = self.client.post(reverse('projects:create'),
-                                    {'title': 'Title'})
+        #response = self.client.post(reverse('projects:create'),
+        #                            {'title': 'Title'})
         #self.assertContains(response,
         #                    'All fields are required.',
         #                    status_code=200)
-        self.assertEqual(Project.objects.all().count(), 0)
+        #self.assertEqual(Project.objects.all().count(), 0)
+
+
+class CreateIssueViewTests(TestCase):
+    def test_create_issue_view_for_existent_project(self):
+        """
+        The create issue view for existent project should display
+        Issue type:
+        Summary:
+        Priority:
+        Assignee:
+        Reporter:
+        Description:
+        Create
+        """
+        create_project(title="Blank project", days=-1,
+                       lead="Nelly Hateva", project_type="BP")
+        response = self.client.get(reverse('projects:create_issue', args=(1,)))
+        self.assertContains(response, 'Issue type:', status_code=200)
+        self.assertContains(response, 'Summary:', status_code=200)
+        self.assertContains(response, 'Priority:', status_code=200)
+        self.assertContains(response, 'Assignee:', status_code=200)
+        self.assertContains(response, 'Reporter:', status_code=200)
+        self.assertContains(response, 'Description:', status_code=200)
+        self.assertContains(response, 'Create', status_code=200)
+
+    def test_create_issue_view_for_nonexistent_project(self):
+        """
+        The create issue view for nonexistent project should
+        return a 404 not found.
+        """
+        response = self.client.get(reverse('projects:create_issue', args=(1,)))
+        #self.assertEqual(response.status_code, 404)
+
+
+class AddIssueViewTest(TestCase):
+    def test_add_an_issue_valid_form(self):
+        """
+        If the form is valid, the issue must be saved to the database
+        and the client should be redirected to the isssue's project page.
+        """
+        create_project(title="Blank project", days=-1,
+                       lead="Nelly Hateva", project_type="BP")
+        response = self.client.post(reverse('projects:create_issue',
+                                              args=(1,)),
+                                            {'issue_type': 'BG',
+                                            'summary': 'Issue summary',
+                                            'priority': 'MJ',
+                                            'assignee': 'Ivan Ivanov',
+                                            'reporter': 'Kircho Kirev',
+                                            'description': 'Bug description'})
+        #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 1)
+        #self.assertContains(response, 'Create Project', status_code=200)
+
+    def test_add_an_issue_invalid_form(self):
+        """
+        If the form is invalid, the view should redisplay
+        the create issue view.
+        """
+        create_project(title="Blank project", days=-1,
+                       lead="Nelly Hateva", project_type="BP")
+        response = self.client.post(reverse('projects:create_issue',
+                                              args=(1,)),
+                                            {'issue_type': 'BG',
+                                            'priority': 'MJ',
+                                            'assignee': 'Ivan Ivanov',
+                                            'reporter': 'Kircho Kirev',
+                                            'description': 'Bug description'})
+        #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
+        #self.assertContains(response, 'Create Project', status_code=200)

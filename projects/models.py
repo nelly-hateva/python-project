@@ -8,13 +8,13 @@ class Project(models.Model):
                                       blank=False, auto_now_add=True)
     lead = models.CharField(max_length=50, blank=False)
 
-    BUG_TRACKING = 'BT'
-    PROJECT_MANAGEMENT = 'PM'
-    AGILE_KANBAN = 'AK'
-    SOTWARE_DEVELOPMENT = 'SD'
-    AGILE_SCRUM = 'AS'
-    BLANK_PROJECT = 'BP'
-    DEMO_PROJECT = 'DP'
+    BUG_TRACKING = 'BUG_TRACKING'
+    PROJECT_MANAGEMENT = 'PROJECT_MANAGEMENT'
+    AGILE_KANBAN = 'AGILE_KANBAN'
+    SOTWARE_DEVELOPMENT = 'SOTWARE_DEVELOPMENT'
+    AGILE_SCRUM = 'AGILE_SCRUM'
+    BLANK_PROJECT = 'BLANK_PROJECT'
+    DEMO_PROJECT = 'DEMO_PROJECT'
     TYPE_OF_PROJECTS = (
         (BUG_TRACKING, 'Bug Tracking'),
         (PROJECT_MANAGEMENT, 'Project Management'),
@@ -24,7 +24,7 @@ class Project(models.Model):
         (BLANK_PROJECT, 'Blank Project'),
         (DEMO_PROJECT, 'Demo Project'),
     )
-    project_type = models.CharField(max_length=2,
+    project_type = models.CharField(max_length=19,
                             choices=TYPE_OF_PROJECTS,
                             default=BLANK_PROJECT)
 
@@ -35,35 +35,35 @@ class Project(models.Model):
 class Issue(models.Model):
     project = models.ForeignKey(Project)
 
-    BUG = 'BG'
-    NEW_FEATURE = 'NF'
-    TASK = 'TS'
-    IMPROVEMENT = 'IM'
+    BUG = 'BUG'
+    NEW_FEATURE = 'NEW_FEATURE'
+    TASK = 'TASK'
+    IMPROVEMENT = 'IMPROVEMENT'
     TYPE_OF_ISSUES = (
         (BUG, 'Bug'),
         (NEW_FEATURE, 'New feature'),
         (TASK, 'Task'),
         (IMPROVEMENT, 'Improvement'),
     )
-    issue_type = models.CharField(max_length=2,
+    issue_type = models.CharField(max_length=11,
                                   choices=TYPE_OF_ISSUES,
                                   default=BUG)
 
     summary = models.CharField(max_length=100, blank=False)
 
-    MAJOR = 'MJ'
-    BLOCKER = 'BL'
-    CRITICAL = 'CR'
-    MINOR = 'MN'
-    TRIVIAL = 'TR'
+    MAJOR = 'MAJOR'
+    BLOCKER = 'BLOCKER'
+    CRITICAL = 'CRITICAL'
+    MINOR = 'MINOR'
+    TRIVIAL = 'TRIVIAL'
     PRIORITY_TYPES = (
         (MAJOR, 'Major'),
         (BLOCKER, 'Blocker'),
         (CRITICAL, 'Critical'),
         (MINOR, 'Minor'),
-        (TRIVIAL, 'TR'),
+        (TRIVIAL, 'Trivial'),
     )
-    priority = models.CharField(max_length=2,
+    priority = models.CharField(max_length=8,
                             choices=PRIORITY_TYPES,
                             default=MAJOR)
 
@@ -72,11 +72,11 @@ class Issue(models.Model):
     description = models.TextField(blank=False)
     due_date = models.DateField(auto_now_add=True)
 
-    OPEN = 'OP'
-    IN_PROGRESS = 'PR'
-    RESOLVED = 'RS'
-    REOPENED = 'RO'
-    CLOSED = 'CL'
+    OPEN = 'OPEN'
+    IN_PROGRESS = 'IN_PROGRESS'
+    RESOLVED = 'RESOLVED'
+    REOPENED = 'REOPENED'
+    CLOSED = 'CLOSED'
     STATUS_TYPES = (
         (OPEN, 'Open'),
         (IN_PROGRESS, 'In progress'),
@@ -84,7 +84,7 @@ class Issue(models.Model):
         (REOPENED, 'Reopened'),
         (CLOSED, 'Closed'),
     )
-    status = models.CharField(max_length=2,
+    status = models.CharField(max_length=11,
                               choices=STATUS_TYPES,
                               default=OPEN)
     comment = models.TextField()
