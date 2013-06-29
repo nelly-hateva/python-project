@@ -1,3 +1,7 @@
+import os
+
+here = lambda *x: os.path.abspath(os.path.join(os.path.dirname(__file__), *x))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -10,36 +14,30 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/nelly/University/Python/tardis/db'
+        'NAME': here('../db')
     }
 }
 
 ALLOWED_HOSTS = []
-
 TIME_ZONE = 'Europe/Sofia'
-
 LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
-
 USE_I18N = False
 USE_L10N = True
 USE_TZ = True
-
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 STATIC_ROOT = ''
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-)
+STATICFILES_DIRS = ()
+SECRET_KEY = '*ym-24e%#ey2s^azcj#n#o05zc@1nw+vx(gy7^thi8-ekk614@'
+ROOT_URLCONF = 'tardis.urls'
+WSGI_APPLICATION = 'tardis.wsgi.application'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
-SECRET_KEY = '*ym-24e%#ey2s^azcj#n#o05zc@1nw+vx(gy7^thi8-ekk614@'
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -54,12 +52,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'tardis.urls'
-
-WSGI_APPLICATION = 'tardis.wsgi.application'
-
 TEMPLATE_DIRS = (
-    '/home/nelly/University/Python/tardis/templates'
+    here('templates')
 )
 
 INSTALLED_APPS = (
@@ -70,6 +64,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.admindocs',
     'projects'
 )
 
