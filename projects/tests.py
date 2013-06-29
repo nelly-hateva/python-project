@@ -23,16 +23,15 @@ class ProjectsIndexViewTests(TestCase):
         If no projects exist, an appropriate message should be displayed.
         """
         response = self.client.get(reverse('projects:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No projects available yet.")
+        self.assertContains(response, 'No projects available yet.', status_code=200)
         self.assertQuerysetEqual(response.context['projects_list'], [])
 
     def test_index_view_with_one_project(self):
         """
         One project should be displayed on the index page.
         """
-        create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", project_type="BP")
+        create_project(title='Blank project', days=-1,
+                       lead='Nelly Hateva', project_type='BLANK_PROJECT')
         response = self.client.get(reverse('projects:index'))
         self.assertQuerysetEqual(
             response.context['projects_list'],
@@ -43,12 +42,12 @@ class ProjectsIndexViewTests(TestCase):
         """
         Projects should be displayed on the index page.
         """
-        create_project(title="Agile Kanban project", days=-5,
-                       lead="Ivan Ivanov", project_type="AK")
-        create_project(title="Blank project", days=-2,
-                       lead="Nelly Hateva", project_type="BP")
-        create_project(title="Agile Scrum project", days=-1,
-                       lead="Georgi Ivanov", project_type="AS")
+        create_project(title='Agile Kanban project', days=-5,
+                       lead='Ivan Ivanov', project_type='AGILE_KANBAN')
+        create_project(title='Blank project', days=-2,
+                       lead='Nelly Hateva', project_type='BLANK_PROJECT')
+        create_project(title='Agile Scrum project', days=-1,
+                       lead='Georgi Ivanov', project_type='AGILE_SCRUM')
         response = self.client.get(reverse('projects:index'))
         self.assertQuerysetEqual(
             response.context['projects_list'],
@@ -71,8 +70,8 @@ class ProjectDetailViewTests(TestCase):
         The detail view of a project should display
         the project's title.
         """
-        project = create_project(title="Project title", days=-1,
-                                 lead="Georgi Georgiev", project_type="AK")
+        project = create_project(title='Project title', days=-1,
+                                 lead='Georgi Georgiev', project_type='DEMO_PROJECT')
         response = self.client.get(reverse('projects:detail',
                                            args=(project.id,)))
         self.assertContains(response, project.title, status_code=200)
@@ -97,8 +96,7 @@ class CreateProjectViewTests(TestCase):
 class AddProjectViewTest(TestCase):
     def test_add_a_project_valid_form(self):
         """
-        If the form is valid, the project must be saved to the database
-        and the client should be redirected to the index page.
+        If the form is valid, the project must be saved to the database.
         """
         self.assertEqual(Project.objects.all().count(), 0)
         response = self.client.post(reverse('projects:add'),
@@ -113,12 +111,13 @@ class AddProjectViewTest(TestCase):
         """
         If the form is invalid, the view should return
         the create project view with error message
-        "All the fields are required".
+        'This field is required.'.
         """
-        response = self.client.post(reverse('projects:create'),
+        response = self.client.post(reverse('projects:add'),
                                     {'title': '',
                                      'lead': 'Project lead',
-                                     'project_type': 'AGILE_KANBAN'})
+                                     'project_type': 'AGILE_KANBAN'},
+                                     follow=True)
         self.assertFormError(response, 'form', 'title', 'This field is required.')
         self.assertEqual(Project.objects.all().count(), 0)
 
@@ -126,12 +125,13 @@ class AddProjectViewTest(TestCase):
         """
         If the form is invalid, the view should return
         the create project view with error message
-        "All the fields are required".
+        'This field is required.'.
         """
-        response = self.client.post(reverse('projects:create'),
+        response = self.client.post(reverse('projects:add'),
                                     {'title': 'Project Title',
                                      'lead': 'Project lead',
-                                     'project_type': ''})
+                                     'project_type': ''},
+                                     follow=True)
         self.assertFormError(response, 'form', 'project_type', 'This field is required.')
         self.assertEqual(Project.objects.all().count(), 0)
 
@@ -139,12 +139,13 @@ class AddProjectViewTest(TestCase):
         """
         If the form is invalid, the view should return
         the create project view with error message
-        "All the fields are required".
+        'This field is required.'.
         """
         response = self.client.post(reverse('projects:create'),
                                     {'title': 'Project Title',
                                      'lead': '',
-                                     'project_type': ''})
+                                     'project_type': 'AGILE_KANBAN'},
+                                     follow=True)
         self.assertFormError(response, 'form', 'lead', 'This field is required.')
         self.assertEqual(Project.objects.all().count(), 0)
 
@@ -161,8 +162,8 @@ class CreateIssueViewTests(TestCase):
         Description:
         Create
         """
-        create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", project_type="BP")
+        create_project(title='Blank project', days=-1,
+                       lead='Nelly Hateva', project_type='BLANK_PROJECT')
         response = self.client.get(reverse('projects:create_issue', args=(1,)))
         self.assertContains(response, 'Issue type:', status_code=200)
         self.assertContains(response, 'Summary:', status_code=200)
@@ -184,51 +185,55 @@ class CreateIssueViewTests(TestCase):
 class AddIssueViewTest(TestCase):
     def test_add_an_issue_valid_form(self):
         """
-        If the form is valid, the issue must be saved to the database
-        and the client should be redirected to the isssue's project page.
+        If the form is valid, the issue must be saved to the database.
         """
-        create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", project_type="BP")
-        #response = self.client.post(reverse('projects:create_issue',
-        #                                      args=(1,)),
-        #                                    {'issue_type': 'BG',
-        #                                    'summary': 'Issue summary',
-        #                                    'priority': 'MJ',
-        #                                    'assignee': 'Ivan Ivanov',
-        #                                    'reporter': 'Kircho Kirev',
-        #                                    'description': 'Bug description'})
-        #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 1)
-        #self.assertContains(response, 'Create Project', status_code=200)
+        create_project(title='Project management project', days=-1,
+                       lead='Nelly Hateva', project_type='PROJECT_MANAGEMENT')
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
+        response = self.client.post(reverse('projects:add_issue', args=(1,)),
+                                    {'issue_type': 'BUG',
+                                    'summary': 'Issue summary',
+                                    'priority': 'MAJOR',
+                                    'assignee': 'Ivan Ivanov',
+                                    'reporter': 'Kircho Kirev',
+                                    'description': 'Bug description'},
+                                     follow=True)
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 1)
 
     def test_add_an_issue_invalid_form_no_issue_type(self):
         """
         If the form is invalid, the view should redisplay
         the create issue view.
         """
-        create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", project_type="BP")
-        #response = self.client.post(reverse('projects:create_issue',
-        #                                      args=(1,)),
-        #                                    {'issue_type': '',
-        #                                    'summary': 'Issue summary',
-        #                                    'priority': 'MJ',
-        #                                    'assignee': 'Ivan Ivanov',
-        #                                    'reporter': 'Kircho Kirev',
-        #                                    'description': 'Bug description'})
-        #self.assertFormError(response, 'form', 'issue_type', 'This field is required.')
+        create_project(title='Software development project', days=-1,
+                       lead='Nelly Hateva', project_type='SOTWARE_DEVELOPMENT')
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
+        response = self.client.post(reverse('projects:add_issue', args=(1,)),
+                                    {'issue_type': '',
+                                    'summary': 'Issue summary',
+                                    'priority': 'MAJOR',
+                                    'assignee': 'Ivan Ivanov',
+                                    'reporter': 'Kircho Kirev',
+                                    'description': 'Bug description'},
+                                     follow=True)
+        self.assertFormError(response, 'form', 'issue_type', 'This field is required.')
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
 
     def test_add_an_issue_invalid_form_no_summary(self):
         """
         If the form is invalid, the view should redisplay
         the create issue view.
         """
-        create_project(title="Blank project", days=-1,
-                       lead="Nelly Hateva", project_type="BP")
-        #response = self.client.post(reverse('projects:create_issue',
-        #                                      args=(1,)),
-        #                                    {'issue_type': 'BG',
-        #                                    'priority': 'MJ',
-        #                                    'assignee': 'Ivan Ivanov',
-        #                                    'reporter': 'Kircho Kirev',
-        #                                    'description': 'Bug description'})
-        #self.assertFormError(response, 'form', 'summary', 'This field is required.')
+        create_project(title='Blank project', days=-1,
+                       lead='Nelly Hateva', project_type='BLANK_PROJECT')
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
+        response = self.client.post(reverse('projects:add_issue', args=(1,)),
+                                    {'issue_type': '',
+                                    'summary': 'Issue summary',
+                                    'priority': 'MAJOR',
+                                    'assignee': 'Ivan Ivanov',
+                                    'reporter': 'Kircho Kirev',
+                                    'description': 'Bug description'},
+                                     follow=True)
+        self.assertFormError(response, 'form', 'summary', 'This field is required.')
+        self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
