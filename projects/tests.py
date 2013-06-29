@@ -103,11 +103,11 @@ class AddProjectViewTest(TestCase):
         response = self.client.post(reverse('projects:create'),
                                     {'title': 'Project title',
                                      'lead': 'Project lead',
-                                     'project_type': 'AK'})
-        #print(Project.objects.all())
-        #self.assertEqual(response.status_code, 302)
-        #self.assertEqual(Project.objects.all()[0].pk, 1)
-        #self.assertContains(response, 'Create Project', status_code=200)
+                                     'project_type': 'AK'},
+                                     follow=True)
+        #self.assertRedirects(response, '/projects/')
+        #self.assertContains(response, 'Project title')
+        #self.assertEqual(Project.objects.all().count(), 1)
 
     def test_add_a_project_with_no_title(self):
         """
@@ -115,14 +115,12 @@ class AddProjectViewTest(TestCase):
         the create project view with error message
         "All the fields are required".
         """
-        #response = self.client.post(reverse('projects:create'),
-        #                            {'title': '',
-        #                             'lead': 'Project lead',
-        #                             'project_type': 'AK'})
-        #self.assertContains(response,
-        #                    'All the fields are required.',
-        #                    status_code=200)
-        #self.assertEqual(Project.objects.all().count(), 0)
+        response = self.client.post(reverse('projects:create'),
+                                    {'title': '',
+                                     'lead': 'Project lead',
+                                     'project_type': 'AK'})
+        self.assertFormError(response, 'form', 'title', 'This field is required.')
+        self.assertEqual(Project.objects.all().count(), 0)
 
     def test_add_a_project_with_no_project_type(self):
         """
@@ -130,13 +128,12 @@ class AddProjectViewTest(TestCase):
         the create project view with error message
         "All the fields are required".
         """
-        #response = self.client.post(reverse('projects:create'),
-        #                            {'title': '',
-        #                             'lead': 'Project lead'})
-        #self.assertContains(response,
-        #                    'All the fields are required.',
-        #                    status_code=200)
-        #self.assertEqual(Project.objects.all().count(), 0)
+        response = self.client.post(reverse('projects:create'),
+                                    {'title': 'Project Title',
+                                     'lead': 'Project lead',
+                                     'project_type': ''})
+        self.assertFormError(response, 'form', 'project_type', 'This field is required.')
+        self.assertEqual(Project.objects.all().count(), 0)
 
     def test_add_a_project_with_no_lead(self):
         """
@@ -144,13 +141,12 @@ class AddProjectViewTest(TestCase):
         the create project view with error message
         "All the fields are required".
         """
-        #response = self.client.post(reverse('projects:create'),
-        #                            {'title': '',
-        #                             'project_type': 'AK'})
-        #self.assertContains(response,
-        #                    'All the fields are required.',
-        #                    status_code=200)
-        #self.assertEqual(Project.objects.all().count(), 0)
+        response = self.client.post(reverse('projects:create'),
+                                    {'title': 'Project Title',
+                                     'lead': '',
+                                     'project_type': ''})
+        self.assertFormError(response, 'form', 'lead', 'This field is required.')
+        self.assertEqual(Project.objects.all().count(), 0)
 
 
 class CreateIssueViewTests(TestCase):
@@ -204,7 +200,24 @@ class AddIssueViewTest(TestCase):
         #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 1)
         #self.assertContains(response, 'Create Project', status_code=200)
 
-    def test_add_an_issue_invalid_form(self):
+    def test_add_an_issue_invalid_form_no_issue_type(self):
+        """
+        If the form is invalid, the view should redisplay
+        the create issue view.
+        """
+        create_project(title="Blank project", days=-1,
+                       lead="Nelly Hateva", project_type="BP")
+        #response = self.client.post(reverse('projects:create_issue',
+        #                                      args=(1,)),
+        #                                    {'issue_type': '',
+        #                                    'summary': 'Issue summary',
+        #                                    'priority': 'MJ',
+        #                                    'assignee': 'Ivan Ivanov',
+        #                                    'reporter': 'Kircho Kirev',
+        #                                    'description': 'Bug description'})
+        #self.assertFormError(response, 'form', 'issue_type', 'This field is required.')
+
+    def test_add_an_issue_invalid_form_no_summary(self):
         """
         If the form is invalid, the view should redisplay
         the create issue view.
@@ -218,5 +231,4 @@ class AddIssueViewTest(TestCase):
         #                                    'assignee': 'Ivan Ivanov',
         #                                    'reporter': 'Kircho Kirev',
         #                                    'description': 'Bug description'})
-        #self.assertEqual(Project.objects.all().get(pk=1).issue_set.count(), 0)
-        #self.assertContains(response, 'Create Project', status_code=200)
+        #self.assertFormError(response, 'form', 'summary', 'This field is required.')
