@@ -5,20 +5,18 @@
 <a href="{% url 'projects:create' %}"> Create Project </a>
 
 {% if projects_list %}
-  <div id="projects">
-    <table>
+  <table>
       <tr>
         <th> Project </th>
-        <th> Project Lead </th>
+        <th> Lead </th>
       </tr>
-      {% for project in projects_list %}
-        <tr>
-          <td><a href="{% url 'projects:detail' project.id %}"> {{ project.title }} </a></td>
-          <td><a href=""> {{project.lead}} </a></td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+    {% for project in projects_list %}
+      <tr>
+        <td><a href="{% url 'projects:detail' project.id %}"> {{ project.title }} </a></td>
+        <td> {{project.lead}} </td>
+      </tr>
+    {% endfor %}
+  </table>
 {% else %}
   <p> No projects available yet. </p>
 {% endif %}

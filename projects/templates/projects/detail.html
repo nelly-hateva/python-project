@@ -4,31 +4,28 @@
 
 <a href="{% url 'projects:index' %}"> Projects </a>
 
-<h3> {{project.title}} </h3>
-<h3> Lead: <a href=""> {{project.lead}} </a> </h3>
+<h4> {{project.title}} </h4>
+<h4> Lead: {{project.lead}} </h4>
 
 <a href="{% url 'projects:create_issue' project.id %}"> Create Issue </a>
 
 {% if project.issue_set.all.count == 0 %}
   <p> No issues for this projects. </p>
 {% else %}
-  <div id="issues">
-    <table>
+  <table>
       <tr>
         <th> Issue </th>
         <th> Status </th>
         <th> Assigne </th>
         <th> Priority </th>
-       </tr>
-
-      {% for issue in project.issue_set.all %}
-        <tr>
-          <td><a href=""> {{ issue.summary }} </a></td>
-          <td>            {{ issue.status }}      </td>
-          <td><a href=""> {{ issue.assigne }} </a></td>
-          <td>            {{ issue.priority }}    </td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+      </tr>
+    {% for issue in project.issue_set.all %}
+      <tr>
+        <td><a href="{% url 'projects:issue' issue.id %}"> {{ issue.summary }} </a></td>
+        <td> {{ issue.status }} </td>
+        <td> {{ issue.assigne }} </td>
+        <td> {{ issue.priority }} </td>
+      </tr>
+    {% endfor %}
+  </table>
 {% endif %}
