@@ -66,7 +66,9 @@ class AddIssueView(generic.RedirectView):
             issue = issue_form.save(commit=False)
             issue.project = Project.objects.all().get(pk=int(kwargs['pk']))
             issue_form.save()
-            return super(AddIssueView, self).post(request, *args, **kwargs)
+            return render(request, 'projects/detail.html', {
+                'project': issue.project
+            })
         else:
             # Redisplay the create issue form
             return render(request, 'projects/issue_form.html', {
