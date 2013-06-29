@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': here('.') + 'db'
+        'NAME': '/home/nelly/University/Python/tardis/db'
     }
 }
 
