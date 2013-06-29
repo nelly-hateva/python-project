@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 class Project(models.Model):
     title = models.CharField(max_length=50, blank=False)
-    start_date = models.DateTimeField('date started',
-                                      blank=False, auto_now_add=True)
+    start_date = models.DateTimeField('date started', blank=False,
+                                        auto_now_add=True)
     lead = models.CharField(max_length=50, blank=False)
 
     BUG_TRACKING = 'BUG_TRACKING'
@@ -24,9 +24,8 @@ class Project(models.Model):
         (BLANK_PROJECT, 'Blank Project'),
         (DEMO_PROJECT, 'Demo Project'),
     )
-    project_type = models.CharField(max_length=19,
-                            choices=TYPE_OF_PROJECTS,
-                            default=BLANK_PROJECT)
+    project_type = models.CharField(max_length=19, choices=TYPE_OF_PROJECTS,
+                                      default=BLANK_PROJECT)
 
     def __str__(self):
         return self.title
@@ -45,9 +44,8 @@ class Issue(models.Model):
         (TASK, 'Task'),
         (IMPROVEMENT, 'Improvement'),
     )
-    issue_type = models.CharField(max_length=11,
-                                  choices=TYPE_OF_ISSUES,
-                                  default=BUG)
+    issue_type = models.CharField(max_length=11, choices=TYPE_OF_ISSUES,
+                                    default=BUG)
 
     summary = models.CharField(max_length=100, blank=False)
 
@@ -63,9 +61,8 @@ class Issue(models.Model):
         (MINOR, 'Minor'),
         (TRIVIAL, 'Trivial'),
     )
-    priority = models.CharField(max_length=8,
-                            choices=PRIORITY_TYPES,
-                            default=MAJOR)
+    priority = models.CharField(max_length=8, choices=PRIORITY_TYPES,
+                                  default=MAJOR)
 
     assignee = models.CharField(max_length=50, blank=False)
     reporter = models.CharField(max_length=50, blank=False)
@@ -84,9 +81,8 @@ class Issue(models.Model):
         (REOPENED, 'Reopened'),
         (CLOSED, 'Closed'),
     )
-    status = models.CharField(max_length=11,
-                              choices=STATUS_TYPES,
-                              default=OPEN)
+    status = models.CharField(max_length=11, choices=STATUS_TYPES,
+                                default=OPEN)
     comment = models.TextField()
 
     def __str__(self):
