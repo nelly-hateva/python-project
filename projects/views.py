@@ -40,7 +40,7 @@ class AddProjectView(generic.RedirectView):
             # Redisplay the create project form.
             return render(request, 'projects/project_form.html', {
                 'form': ProjectForm,
-                'error_message': "All the fields are required.",
+                'error_message': project_form.errors,
             })
 
 

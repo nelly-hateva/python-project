@@ -100,14 +100,14 @@ class AddProjectViewTest(TestCase):
         If the form is valid, the project must be saved to the database
         and the client should be redirected to the index page.
         """
-        response = self.client.post(reverse('projects:create'),
+        self.assertEqual(Project.objects.all().count(), 0)
+        response = self.client.post(reverse('projects:add'),
                                     {'title': 'Project title',
                                      'lead': 'Project lead',
-                                     'project_type': 'AK'},
+                                     'project_type': 'AGILE_KANBAN'},
                                      follow=True)
-        #self.assertRedirects(response, '/projects/')
-        #self.assertContains(response, 'Project title')
-        #self.assertEqual(Project.objects.all().count(), 1)
+    
+        self.assertEqual(Project.objects.all().count(), 1)
 
     def test_add_a_project_with_no_title(self):
         """
@@ -118,7 +118,7 @@ class AddProjectViewTest(TestCase):
         response = self.client.post(reverse('projects:create'),
                                     {'title': '',
                                      'lead': 'Project lead',
-                                     'project_type': 'AK'})
+                                     'project_type': 'AGILE_KANBAN'})
         self.assertFormError(response, 'form', 'title', 'This field is required.')
         self.assertEqual(Project.objects.all().count(), 0)
 
