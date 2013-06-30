@@ -2,7 +2,7 @@ from django.views import generic
 from django.utils import timezone
 from django.http import HttpResponse,  HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import RequestContext, loader
 
 from projects.models import Project, Issue
@@ -81,16 +81,36 @@ class DetailIssueView(generic.DetailView):
     model = Issue
     template_name = 'projects/issue.html'
 
-    def get_queryset(self):
-        return Issue.objects.all()
-
 
 class StartIssueView(generic.View):
-    pass
+    def post(self, request, *args, **kwargs):
+        issue = Issue.objects.all().get(pk=kwargs['pk'])
+        if issue.status == 'OPEN':
+            issue.status = 'IN_PROGRESS'
+        elif issue.status == 'RESOLVED':
+            issue.status == 'IN_PROGRESS'
+        issue.save()
+        return render(request, 'projects/detail.html', {
+            'project': issue.project
+        }) 
 
 
 class StopIssueView(generic.View):
-    pass
+    def post(self, request, *args, **kwargs):
+        issue = Issue.objects.all().get(pk=kwargs['pk'])
+        if issue.status == 'OPEN':
+            issue.status = 'IN_PROGRESS'
+        elif issue.status == 'IN_PROGRESS':
+            issue.status = 'RESOLVED'
+        elif issue.status == 'RESOLVED':
+            issue.status == 'IN_PROGRESS'
+        elif issue.status == 'REOPENED':
+            issue.status = 'RESOLVED'
+        issue.save()
+        return render(request, 'projects/detail.html', {
+            'project': issue.project
+        })
+
 
 
 class CloseIssueView(generic.View):
