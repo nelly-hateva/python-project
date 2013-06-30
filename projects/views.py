@@ -83,3 +83,7 @@ class DetailIssueView(generic.DetailView):
 
     def get_queryset(self):
         return Issue.objects.all()
+
+
+class StartIssueView(generic.View):
+    pass

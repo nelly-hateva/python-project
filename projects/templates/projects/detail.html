@@ -23,8 +23,20 @@
       <tr>
         <td><a href="{% url 'projects:issue' issue.id %}"> {{ issue.summary }} </a></td>
         <td> {{ issue.status }} </td>
-        <td> {{ issue.assigne }} </td>
+        <td> {{ issue.assignee }} </td>
         <td> {{ issue.priority }} </td>
+
+        {% if issue.status == 'OPEN' %}
+        <form action="{% url 'projects:start' issue.id %}" method="post"> {% csrf_token %}
+          <td> <input type='submit' value='START'> </td>
+        </form>
+        {% elif issue.status == 'IN_PROGRESS' %}
+        <td> <input type='submit' value='STOP'> </td>
+        {% elif issue.status == 'RESOLVED' %}
+        <td> <input type='submit' value='START'> </td>
+        {% elif issue.status == 'REOPENED' %}
+        <td> <input type='submit' value='STOP'> </td>
+        {% endif %}
       </tr>
     {% endfor %}
   </table>
