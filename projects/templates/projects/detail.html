@@ -31,12 +31,21 @@
           <td> <input type='submit' value='START'> </td>
         </form>
         {% elif issue.status == 'IN_PROGRESS' %}
-        <td> <input type='submit' value='STOP'> </td>
+         <form action="{% url 'projects:stop' issue.id %}" method="post"> {% csrf_token %}
+          <td> <input type='submit' value='STOP'> </td>
+        </form>
         {% elif issue.status == 'RESOLVED' %}
-        <td> <input type='submit' value='START'> </td>
+         <form action="{% url 'projects:start' issue.id %}" method="post"> {% csrf_token %}
+          <td> <input type='submit' value='START'> </td>
+        </form>
         {% elif issue.status == 'REOPENED' %}
-        <td> <input type='submit' value='STOP'> </td>
+        <form action="{% url 'projects:stop' issue.id %}" method="post"> {% csrf_token %}
+          <td> <input type='submit' value='STOP'> </td>
+        </form>
         {% endif %}
+         <form action="{% url 'projects:close' issue.id %}" method="post"> {% csrf_token %}
+          <td> <input type='submit' value='CLOSE'> </td>
+        </form>
       </tr>
     {% endfor %}
   </table>

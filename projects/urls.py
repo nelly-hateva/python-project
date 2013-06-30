@@ -12,4 +12,6 @@ urlpatterns = patterns('',
     url(r'^add_issue/(?P<pk>\d+)/$', views.AddIssueView.as_view(url='/projects'), name='add_issue'),
     url(r'^issue/(?P<pk>\d+)/$', views.DetailIssueView.as_view(), name='issue'),
     url(r'^start/(?P<pk>\d+)/$', views.StartIssueView.as_view(), name='start'),
+    url(r'^stop/(?P<pk>\d+)/$', views.StopIssueView.as_view(), name='stop'),
+    url(r'^close/(?P<pk>\d+)/$', views.CloseIssueView.as_view(), name='close'),
 )

@@ -87,3 +87,11 @@ class DetailIssueView(generic.DetailView):
 
 class StartIssueView(generic.View):
     pass
+
+
+class StopIssueView(generic.View):
+    pass
+
+
+class CloseIssueView(generic.View):
+    pass
