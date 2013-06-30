@@ -101,6 +101,7 @@ class StopIssueView(generic.View):
         issue.save()
         return HttpResponseRedirect('/projects/' + str(issue.project.id))
 
+
 class CloseIssueView(generic.View):
     def post(self, request, *args, **kwargs):
         issue = Issue.objects.all().get(pk=kwargs['pk'])
