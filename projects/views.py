@@ -85,33 +85,24 @@ class DetailIssueView(generic.DetailView):
 class StartIssueView(generic.View):
     def post(self, request, *args, **kwargs):
         issue = Issue.objects.all().get(pk=kwargs['pk'])
-        if issue.status == 'OPEN':
+        print(issue.status)
+        if issue.status == 'OPEN' or issue.status == 'RESOLVED':
             issue.status = 'IN_PROGRESS'
-        elif issue.status == 'RESOLVED':
-            issue.status == 'IN_PROGRESS'
         issue.save()
-        return render(request, 'projects/detail.html', {
-            'project': issue.project
-        }) 
+        return HttpResponseRedirect('/projects/' + str(issue.project.id))
 
 
 class StopIssueView(generic.View):
     def post(self, request, *args, **kwargs):
         issue = Issue.objects.all().get(pk=kwargs['pk'])
-        if issue.status == 'OPEN':
-            issue.status = 'IN_PROGRESS'
-        elif issue.status == 'IN_PROGRESS':
-            issue.status = 'RESOLVED'
-        elif issue.status == 'RESOLVED':
-            issue.status == 'IN_PROGRESS'
-        elif issue.status == 'REOPENED':
+        if issue.status == 'IN_PROGRESS' or 'REOPENED':
             issue.status = 'RESOLVED'
         issue.save()
-        return render(request, 'projects/detail.html', {
-            'project': issue.project
-        })
-
-
+        return HttpResponseRedirect('/projects/' + str(issue.project.id))
 
 class CloseIssueView(generic.View):
-    pass
+    def post(self, request, *args, **kwargs):
+        issue = Issue.objects.all().get(pk=kwargs['pk'])
+        issue.status = 'CLOSED'
+        issue.save()
+        return HttpResponseRedirect('/projects/' + str(issue.project.id))

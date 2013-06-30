@@ -3,13 +3,28 @@
 <link rel="stylesheet" type="text/css" href="{% static 'projects/style.css' %}" />
 
 <h3> {{ issue.summary }} </h3>
+<h4> Status: {{ issue.status }} </h4>
+{% if issue.status == 'OPEN' or issue.status == 'RESOLVED' %}
+          <form action="{% url 'projects:start' issue.id %}" method="post"> {% csrf_token %}
+            <input type='submit' value='START'>
+          </form>
+        {% elif issue.status == 'IN_PROGRESS' or issue.status == 'REOPENED' %}
+          <form action="{% url 'projects:stop' issue.id %}" method="post"> {% csrf_token %}
+            <input type='submit' value='STOP'>
+          </form>
+        {% endif %}
+        {% if issue.status != 'CLOSED' %}
+          <form action="{% url 'projects:close' issue.id %}" method="post"> {% csrf_token %}
+            <input type='submit' value='CLOSE'>
+          </form>
+        {% endif %}
+
 <h4> Type: {{ issue.issue_type }} </h4>
 <h4> Priority: {{ issue.priority }} </h4>
 <h4> Assignee: {{ issue.assignee }} </h4>
 <h4> Reporter: {{ issue.reporter }} </h4>
 <h4> Description: {{ issue.description }} </h4>
 <h4> Due date: {{ issue.due_date }} </h4>
-<h4> Status: {{ issue.status }} </h4>
 {% if issue.comment %}
   <h4> Comment: {{ issue.comment }} </h4>
 {% endif %}
