@@ -70,9 +70,11 @@ class AddIssueView(generic.RedirectView):
                 'project': issue.project
             })
         else:
+            project_id = Project.objects.all().get(pk=kwargs['pk']).id
             # Redisplay the create issue form
             return render(request, 'projects/issue_form.html', {
                 'form': IssueForm,
+                'project_id': project_id,
                 'error_message': 'All the fields are required',
             })
 
@@ -85,7 +87,6 @@ class DetailIssueView(generic.DetailView):
 class StartIssueView(generic.View):
     def post(self, request, *args, **kwargs):
         issue = Issue.objects.all().get(pk=kwargs['pk'])
-        print(issue.status)
         if issue.status == 'OPEN' or issue.status == 'RESOLVED':
             issue.status = 'IN_PROGRESS'
         issue.save()
