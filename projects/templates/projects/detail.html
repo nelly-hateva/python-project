@@ -26,20 +26,12 @@
         <td> {{ issue.assignee }} </td>
         <td> {{ issue.priority }} </td>
 
-        {% if issue.status == 'OPEN' %}
+        {% if issue.status == 'OPEN' or issue.status == 'RESOLVED' %}
         <form action="{% url 'projects:start' issue.id %}" method="post"> {% csrf_token %}
           <td> <input type='submit' value='START'> </td>
         </form>
-        {% elif issue.status == 'IN_PROGRESS' %}
+        {% elif issue.status == 'IN_PROGRESS' or issue.status == 'REOPENED' %}
          <form action="{% url 'projects:stop' issue.id %}" method="post"> {% csrf_token %}
-          <td> <input type='submit' value='STOP'> </td>
-        </form>
-        {% elif issue.status == 'RESOLVED' %}
-         <form action="{% url 'projects:start' issue.id %}" method="post"> {% csrf_token %}
-          <td> <input type='submit' value='START'> </td>
-        </form>
-        {% elif issue.status == 'REOPENED' %}
-        <form action="{% url 'projects:stop' issue.id %}" method="post"> {% csrf_token %}
           <td> <input type='submit' value='STOP'> </td>
         </form>
         {% endif %}
