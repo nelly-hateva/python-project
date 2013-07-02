@@ -83,7 +83,6 @@ class Issue(models.Model):
     )
     status = models.CharField(max_length=11, choices=STATUS_TYPES,
                                 default=OPEN)
-    comment = models.TextField()
 
     def __str__(self):
         return self.summary

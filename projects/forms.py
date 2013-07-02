@@ -12,4 +12,4 @@ class ProjectForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
-        exclude = ('project', 'status', 'comment')
+        exclude = ('project', 'status')

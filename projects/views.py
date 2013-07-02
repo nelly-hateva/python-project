@@ -89,6 +89,7 @@ class StartIssueView(generic.View):
         issue = Issue.objects.all().get(pk=kwargs['pk'])
         if issue.status == 'OPEN' or issue.status == 'RESOLVED':
             issue.status = 'IN_PROGRESS'
+        issue.start_time = timezone.now()
         issue.save()
         return HttpResponseRedirect('/projects/' + str(issue.project.id))
 
